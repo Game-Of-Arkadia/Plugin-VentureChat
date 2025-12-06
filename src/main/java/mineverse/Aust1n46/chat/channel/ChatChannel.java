@@ -76,7 +76,8 @@ public class ChatChannel {
 					filter, defaultChannel, alias, distance, autojoin, bungee, cooldown, prefix, format);
 			channels[counter++] = chatChannel;
 			chatChannels.put(name.toLowerCase(), chatChannel);
-			chatChannels.put(alias.toLowerCase(), chatChannel);
+			if(!"None".equals(alias))
+				chatChannels.put(alias.toLowerCase(), chatChannel);
 			if (defaultChannel) {
 				defaultChatChannel = chatChannel;
 				defaultColor = color;
@@ -165,6 +166,15 @@ public class ChatChannel {
 			}
 		}
 		return joinlist;
+	}
+
+	public static boolean registerChannel(ChatChannel channel) {
+		if(isChannel(channel.getName())) return false;
+		chatChannels.put(channel.name.toLowerCase(), channel);
+		if(channel.alias != null)
+			chatChannels.put(channel.alias.toLowerCase(), channel);
+
+		return true;
 	}
 
 	/**
