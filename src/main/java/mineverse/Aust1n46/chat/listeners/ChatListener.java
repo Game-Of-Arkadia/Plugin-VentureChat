@@ -174,11 +174,12 @@ public class ChatListener implements Listener {
 							filtered = Format.FormatString(filtered);
 						}
 						filtered = " " + filtered;
+						String host = MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()) == null ? "null" : MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()).getName();
 						if(plugin.getConfig().getString("partyformat").equalsIgnoreCase("Default")) {
-							partyformat = ChatColor.GREEN + "[" + MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()).getName() + "'s Party] " + mcp.getName() + ":" + filtered;
+							partyformat = ChatColor.GREEN + "[" + host + "'s Party] " + mcp.getName() + ":" + filtered;
 						}
 						else {
-							partyformat = Format.FormatStringAll(plugin.getConfig().getString("partyformat").replace("{host}", MineverseChatAPI.getMineverseChatPlayer(mcp.getParty()).getName()).replace("{player}", mcp.getName())) + filtered;
+							partyformat = Format.FormatStringAll(plugin.getConfig().getString("partyformat").replace("{host}", host).replace("{player}", mcp.getName())) + filtered;
 						}
 						p.getPlayer().sendMessage(partyformat);
 					}
