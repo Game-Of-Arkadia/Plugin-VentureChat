@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>mineverse.Aust1n46.chat</groupId>
     <artifactId>VentureChat</artifactId>
-    <version>3.8.0</version>
+    <version>3.8.1-SNAPSHOT</version>
     <url>https://bitbucket.org/Aust1n46/venturechat/src/master</url>
     <scm>
         <url>https://bitbucket.org/Aust1n46/venturechat/src/master</url>
@@ -39,12 +39,12 @@
 		    <plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-surefire-plugin</artifactId>
-			    <version>2.22.0</version>
+			    <version>3.5.4</version>
 			    <dependencies>
 				    <dependency>
 					    <groupId>org.apache.maven.surefire</groupId>
 					    <artifactId>surefire-junit4</artifactId>
-					    <version>2.22.0</version>
+					    <version>3.5.4</version>
 				    </dependency>
 			    </dependencies>
 			    <configuration>
@@ -106,6 +106,11 @@
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
     <dependencies>
@@ -191,17 +196,17 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.20-R0.1-SNAPSHOT</version>
+            <version>1.21-R0.4</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.20-R0.1-SNAPSHOT</version>
             <type>javadoc</type>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-api</artifactId>
