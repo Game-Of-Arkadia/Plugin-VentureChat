@@ -27,7 +27,8 @@ public class ChatChannel {
 	private static ChatChannel defaultChatChannel;
 	private static String defaultColor;
 	private static HashMap<String, ChatChannel> chatChannels;
-	
+	private static final Map<String, ChatChannel> CUSTOM_CHAT_CHANNELS = new HashMap<String, ChatChannel>();
+
 	@Deprecated
 	private static ChatChannel[] channels;
 
@@ -92,6 +93,8 @@ public class ChatChannel {
 			chatChannels.put("missingdefault", defaultChatChannel);
 			chatChannels.put("md", defaultChatChannel);
 		}
+		// Register custom elements even after reload
+		chatChannels.putAll(CUSTOM_CHAT_CHANNELS);
 	}
 
 	/**
@@ -171,9 +174,11 @@ public class ChatChannel {
 	public static boolean registerChannel(ChatChannel channel) {
 		if(isChannel(channel.getName())) return false;
 		chatChannels.put(channel.name.toLowerCase(), channel);
-		if(channel.alias != null)
+		CUSTOM_CHAT_CHANNELS.put(channel.name.toLowerCase(), channel);
+		if(channel.alias != null) {
 			chatChannels.put(channel.alias.toLowerCase(), channel);
-
+			CUSTOM_CHAT_CHANNELS.put(channel.alias.toLowerCase(), channel);
+		}
 		return true;
 	}
 
