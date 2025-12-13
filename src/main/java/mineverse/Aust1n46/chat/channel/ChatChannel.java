@@ -2,6 +2,7 @@ package mineverse.Aust1n46.chat.channel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +28,7 @@ public class ChatChannel {
 	private static ChatChannel defaultChatChannel;
 	private static String defaultColor;
 	private static HashMap<String, ChatChannel> chatChannels;
-	private static final Map<String, ChatChannel> CUSTOM_CHAT_CHANNELS = new HashMap<String, ChatChannel>();
+	private static final Map<String, ChatChannel> CUSTOM_CHAT_CHANNELS = new HashMap<>();
 
 	@Deprecated
 	private static ChatChannel[] channels;
