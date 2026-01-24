@@ -79,15 +79,8 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 	private static Permission permission = null;
 	private static Chat chat = null;
 
-	// TODO: This won't be so poorly done in the 4.0.0 branch I promise...
 	public static boolean isConnectedToProxy() {
-		try {
-			final MineverseChat plugin = MineverseChat.getInstance();
-			return (plugin.getServer().spigot().getConfig().getBoolean("settings.bungeecord")
-					|| plugin.getServer().spigot().getPaperConfig().getBoolean("settings.velocity-support.enabled")
-					|| plugin.getServer().spigot().getPaperConfig().getBoolean("proxies.velocity.enabled"));
-		} catch (final NoSuchMethodError ignored) {} // Thrown if server isn't Paper.
-		return false;
+		return Bukkit.getServerConfig().isProxyEnabled();
 	}
 	
 	@Override

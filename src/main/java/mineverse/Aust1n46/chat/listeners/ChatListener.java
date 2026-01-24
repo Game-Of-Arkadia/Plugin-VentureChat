@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.Set;
 
-import net.essentialsx.api.v2.services.discord.DiscordService;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,9 +15,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.PluginManager;
 
 import com.comphenix.protocol.events.PacketContainer;
-import com.massivecraft.factions.entity.MPlayer;
-import com.palmergames.bukkit.towny.TownyUniverse;
-import com.palmergames.bukkit.towny.object.Resident;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import mineverse.Aust1n46.chat.MineverseChat;
@@ -34,8 +30,7 @@ import mineverse.Aust1n46.chat.utilities.Format;
 
 //This class listens to chat through the chat event and handles the bulk of the chat channels and formatting.
 public class ChatListener implements Listener {
-	private final boolean essentialsDiscordHook = Bukkit.getPluginManager().isPluginEnabled("EssentialsDiscord");
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onChannelJoin(ChannelJoinEvent event) {
@@ -268,7 +263,7 @@ public class ChatListener implements Listener {
 		}
 		try {
 			if (mcp.hasCooldown(eventChannel)) {
-				long cooldownTime = mcp.getCooldowns().get(eventChannel).longValue();
+				long cooldownTime = mcp.getCooldowns().get(eventChannel);
 				if (dateTimeSeconds < cooldownTime) {
 					long remainingCooldownTime = cooldownTime - dateTimeSeconds;
 					String cooldownString = Format.parseTimeStringFromMillis(remainingCooldownTime * Format.MILLISECONDS_PER_SECOND);
@@ -367,76 +362,6 @@ public class ChatListener implements Listener {
 					recipientCount--;
 					continue;
 				}
-				if(plugin.getConfig().getBoolean("enable_towny_channel") && pluginManager.isPluginEnabled("Towny")) {
-					try {
-						TownyUniverse towny = TownyUniverse.getInstance();
-						if(eventChannel.getName().equalsIgnoreCase("Town")) {
-							Resident r = towny.getResident(p.getName());
-							Resident pp = towny.getResident(mcp.getName());
-							if(!pp.hasTown()) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-								continue;
-							}
-							else if(!r.hasTown()) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-								continue;
-							}
-							else if(!(r.getTown().getName().equals(pp.getTown().getName()))) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-								continue;
-							}
-						}
-						if(eventChannel.getName().equalsIgnoreCase("Nation")) {
-							Resident r = towny.getResident(p.getName());
-							Resident pp = towny.getResident(mcp.getName());
-							if(!pp.hasNation()) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-								continue;
-							}
-							else if(!r.hasNation()) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-								continue;
-							}
-							else if(!(r.getTown().getNation().getName().equals(pp.getTown().getNation().getName()))) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-								continue;
-							}
-						}
-					}
-					catch(Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-
-				if(plugin.getConfig().getBoolean("enable_factions_channel") && pluginManager.isPluginEnabled("Factions")) {
-					try {
-						if(eventChannel.getName().equalsIgnoreCase("Faction")) {
-							MPlayer mplayer = MPlayer.get(mcp.getPlayer());
-							MPlayer mplayerp = MPlayer.get(p.getPlayer());
-							if(!mplayer.hasFaction()) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-							}
-							else if(!mplayerp.hasFaction()) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-							}
-							else if(!(mplayer.getFactionName().equals(mplayerp.getFactionName()))) {
-								recipients.remove(p.getPlayer());
-								recipientCount--;
-							}
-						}
-					}
-					catch(Exception ex) {
-						ex.printStackTrace();
-					}
-				}
 
 				if(chDistance > (double) 0 && !bungee && !p.getRangedSpy()) {
 					locreceip = p.getPlayer().getLocation();
@@ -511,10 +436,6 @@ public class ChatListener implements Listener {
 		String globalJSON = event.getGlobalJSON();
 		int hash = event.getHash();
 		boolean bungee = event.isBungee();
-
-		if (essentialsDiscordHook && channel.isDefaultchannel()) {
-			Bukkit.getServicesManager().load(DiscordService.class).sendChatMessage(mcp.getPlayer(), chat);
-		}
 		
 		if(!bungee) {
 			if(Database.isEnabled()) {

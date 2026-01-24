@@ -66,7 +66,7 @@ public class Edit extends Command {
 						}
 						if (message.getMessage().contains(Format.FormatStringAll(plugin.getConfig().getString("messageremovericon")))) {
 							String submessage = message.getMessage().substring(0, message.getMessage().length() - plugin.getConfig().getString("messageremovericon").length() - 1)
-									.replaceAll("(�([a-z0-9]))", "");
+									.replaceAll("(\u00A7([a-z0-9]))", "");
 							if (submessage.hashCode() == hash) {
 								WrappedChatComponent removedComponent = p.getPlayer().hasPermission("venturechat.message.bypass")
 										? Edit.this.getMessageDeletedChatComponentAdmin(message)

@@ -9,9 +9,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import mineverse.Aust1n46.chat.MineverseChat;
-import org.apache.commons.lang.StringUtils;
+import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
@@ -52,9 +53,6 @@ public class Format {
 	public static final long MILLISECONDS_PER_HOUR = 3600000;
 	public static final long MILLISECONDS_PER_MINUTE = 60000;
 	public static final long MILLISECONDS_PER_SECOND = 1000;
-	
-	public static final String DEFAULT_MESSAGE_SOUND = "ENTITY_PLAYER_LEVELUP";
-	public static final String DEFAULT_LEGACY_MESSAGE_SOUND = "LEVEL_UP";
 
 	/**
      * Converts a message to Minecraft JSON formatting while applying the
@@ -89,9 +87,6 @@ public class Format {
      *
      * @param s
      * @param format
-     * @param prefix
-     * @param nickname
-     * @param suffix
      * @param icp
      * @return {@link String}
      */
@@ -124,12 +119,12 @@ public class Format {
 							hoverText = escapeJsonChars(Format.FormatStringAll(
 									PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), hover.substring(0, hover.length() - 1))));
 						} else {
-							hoverText = StringUtils.EMPTY;
+							hoverText = "";
 						}
 						final ClickAction clickAction = jsonAttribute.getClickAction();
 						final String actionJson;
 						if (clickAction == ClickAction.NONE) {
-							actionJson = StringUtils.EMPTY;
+							actionJson = "";
 						} else {
 							final String clickText = escapeJsonChars(Format.FormatStringAll(
 									PlaceholderAPI.setBracketPlaceholders(icp.getPlayer(), jsonAttribute.getClickText())));
@@ -138,7 +133,7 @@ public class Format {
 						}
 						final String hoverJson;
 						if (hoverText.isEmpty()) {
-							hoverJson = StringUtils.EMPTY;
+							hoverJson = "";
 						} else {
 							hoverJson = ",\"hover_event\":{\"action\":\"show_text\",\"value\":{\"text\":\"\",\"extra\":["
 									+ convertToJsonColors(hoverText) + "]}}";
@@ -958,8 +953,8 @@ public class Format {
 	
 	public static void playMessageSound(MineverseChatPlayer mcp) {
 		Player player = mcp.getPlayer();
-		String soundName = getInstance().getConfig().getString("message_sound", DEFAULT_MESSAGE_SOUND);
-		if (!soundName.equalsIgnoreCase("None")) {
+		String soundName = getInstance().getConfig().getString("message_sound");
+		if (!"none".equalsIgnoreCase(soundName)) {
 			try {
 				Sound messageSound = getSound(soundName);
 				player.playSound(player.getLocation(), messageSound, 1, 0);
@@ -972,22 +967,17 @@ public class Format {
 	}
 	
 	private static Sound getSound(String soundName) {
-		for (Sound sound : Sound.values()) {
-			if (sound.toString().equalsIgnoreCase(soundName)) {
-				return sound;
-			}
+		if(soundName == null) return getDefaultMessageSound();
+		Sound sound = Registry.SOUNDS.get(Key.key(soundName));
+		if(sound == null) {
+			Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Message sound invalid!"));
+			return getDefaultMessageSound();
 		}
-		Bukkit.getConsoleSender().sendMessage(Format.FormatStringAll("&8[&eVentureChat&8]&c - Message sound invalid!"));
-		return getDefaultMessageSound();
+		return sound;
 	}
 	
 	private static Sound getDefaultMessageSound() {
-		if(VersionHandler.is1_7() || VersionHandler.is1_8()) {
-			return Sound.valueOf(DEFAULT_LEGACY_MESSAGE_SOUND);
-		}
-		else {
-			return Sound.valueOf(DEFAULT_MESSAGE_SOUND);
-		}
+		return Sound.ENTITY_PLAYER_LEVELUP;
 	}
 	
 	public static String stripColor(String message) {

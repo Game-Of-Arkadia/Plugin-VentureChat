@@ -23,6 +23,7 @@ import mineverse.Aust1n46.chat.gui.GuiSlot;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
 import mineverse.Aust1n46.chat.versions.VersionHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class VentureChatGui extends Command {
 	private MineverseChat plugin = MineverseChat.getInstance();
@@ -32,7 +33,7 @@ public class VentureChatGui extends Command {
 	}
 
 	@Override
-	public boolean execute(CommandSender sender, String command, String[] args) {
+	public boolean execute(@NotNull CommandSender sender, @NotNull String command, @NotNull String @NotNull [] args) {
 		if (!(sender instanceof Player)) {
 			Bukkit.getServer().getConsoleSender().sendMessage(LocalizedMessage.COMMAND_MUST_BE_RUN_BY_PLAYER.toString());
 			return true;
@@ -44,7 +45,7 @@ public class VentureChatGui extends Command {
 		MineverseChatPlayer mcp = MineverseChatAPI.getOnlineMineverseChatPlayer((Player) sender);
 		if (mcp.getPlayer().hasPermission("venturechat.gui")) {
 			MineverseChatPlayer target = MineverseChatAPI.getMineverseChatPlayer(args[0]);
-			if (target == null && !args[0].equals("Discord")) {
+			if (target == null) {
 				mcp.getPlayer().sendMessage(LocalizedMessage.PLAYER_OFFLINE.toString().replace("{args}", args[0]));
 				return true;
 			}
@@ -55,10 +56,6 @@ public class VentureChatGui extends Command {
 					hash = Integer.parseInt(args[2]);
 				} catch (Exception e) {
 					sender.sendMessage(LocalizedMessage.INVALID_HASH.toString());
-					return true;
-				}
-				if (args[0].equals("Discord")) {
-					this.openInventoryDiscord(mcp, channel, hash);
 					return true;
 				}
 				this.openInventory(mcp, target, channel, hash);
@@ -89,7 +86,7 @@ public class VentureChatGui extends Command {
 		}
 
 		ItemMeta closeMeta = close.getItemMeta();
-		closeMeta.setDisplayName(ChatColor.RED + "" + ChatColor.ITALIC + "Close GUI");
+		closeMeta.setDisplayName("§c" + ChatColor.ITALIC + "Close GUI");
 		close.setItemMeta(closeMeta);
 
 		SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
@@ -147,15 +144,15 @@ public class VentureChatGui extends Command {
 		}
 
 		ItemMeta closeMeta = close.getItemMeta();
-		closeMeta.setDisplayName("�oClose GUI");
+		closeMeta.setDisplayName("§oClose GUI");
 		close.setItemMeta(closeMeta);
 
 		SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
 		skullMeta.setOwner("Scarsz");
-		skullMeta.setDisplayName("�bDiscord_Message");
-		List<String> skullLore = new ArrayList<String>();
-		skullLore.add("�7Channel: " + channel.getColor() + channel.getName());
-		skullLore.add("�7Hash: " + channel.getColor() + hash);
+		skullMeta.setDisplayName("§bDiscord_Message");
+		List<String> skullLore = new ArrayList<>();
+		skullLore.add("§7Channel: " + channel.getColor() + channel.getName());
+		skullLore.add("§7Hash: " + channel.getColor() + hash);
 		skullMeta.setLore(skullLore);
 		skull.setItemMeta(skullMeta);
 		skull.setDurability((short) 3);

@@ -1,9 +1,19 @@
 name: VentureChat
 version: ${project.version}
-api-version: 1.13
+api-version: 1.21
 main: mineverse.Aust1n46.chat.MineverseChat
 depend: [Vault, ProtocolLib, PlaceholderAPI]
-softdepend: [Towny, Factions, EssentialsDiscord]
 author: Aust1n46
 website: https://bitbucket.org/Aust1n46/venturechat/
-description: #1 Channels Chat plugin! Spigot + Bungee. Supports PlaceholderAPI + JSON formatting. Moderation GUI!
+description: "#1 Channels Chat plugin! Spigot + Bungee. Supports PlaceholderAPI + JSON formatting. Moderation GUI!"
+
+commands:
+  broadcast:
+    usage: /broadcast <message>
+    description: Broadcast a message to the current server.
+    permission: venturechat.admin.broadcast
+
+permissions:
+  venturechat.admin.broadcast:
+    description: Allows the use of the /broadcast command.
+    default: op

@@ -40,12 +40,6 @@ blockablecommands:
 - vote
 - me
 
-# blacklisted nicknames 
-nicknames:
-- Notch
-
-nickname-in-tablist: true
-
 # {player} : player sending command
 # {command} : command typed
 commandspy:
@@ -253,17 +247,6 @@ alias:
     permissions: None
     components:
     - 'Message: &aThis is our website: www.site.net'
-  
-# Enables the creation of special Towny channels: Town and Nation
-# To create these channels, simply name two channels below "Town" and "Nation"
-# Bungeecord must be set to false for these channels! 
-enable_towny_channel: false
-
-# Enables the creation of a special faction only channel using the Factions plugin
-# To create this channel, simply name a channel below "Faction"
-# Bungeecord must be set to false for this channel!
-# WARNING: May not work for all versions of Factions!
-enable_factions_channel: false
 
 # color = [channel] color
 # chatcolor = text color
@@ -299,27 +282,12 @@ channels:
     default: true
     distance: 0
     cooldown: 0
-    bungeecord: false
+    bungeecord: true
     alias: g
     permissions: None
     speak_permissions: None
     channel_prefix: '&f[&2Global&f]'
     format: '{venturechat_channel_prefix} {vault_prefix}{player_displayname}&2:'
-  Network:
-    color: gold
-    chatcolor: gold
-    mutable: true
-    filter: true
-    autojoin: true
-    default: false
-    distance: 0
-    cooldown: 3
-    bungeecord: true
-    alias: be
-    permissions: None
-    speak_permissions: None
-    channel_prefix: '&f[&6Network&f]'
-    format: '{venturechat_channel_prefix} {vault_prefix}{player_displayname}&6:'
   Announcement:
     color: red
     chatcolor: red
@@ -344,42 +312,12 @@ channels:
     default: false
     distance: 0
     cooldown: 0
-    bungeecord: false
+    bungeecord: true
     alias: st
     permissions: staffchannel
     speak_permissions: None
     channel_prefix: '&f[&aStaff&f]'
     format: '{venturechat_channel_prefix} {vault_prefix}{player_displayname}&a:'
-  Donator:
-    color: light_purple
-    chatcolor: light_purple
-    mutable: true
-    filter: true
-    autojoin: true
-    default: false
-    distance: 0
-    cooldown: 0
-    bungeecord: false
-    alias: d
-    permissions: donatorchannel
-    speak_permissions: None
-    channel_prefix: '&f[&dDonator&f]'
-    format: '{venturechat_channel_prefix} {vault_prefix}{player_displayname}&d:'
-  Help:
-    color: aqua
-    chatcolor: aqua
-    mutable: true
-    filter: true
-    autojoin: true
-    default: false
-    distance: 0
-    cooldown: 0
-    bungeecord: false
-    alias: h
-    permissions: None
-    speak_permissions: None
-    channel_prefix: '&f[&bHelp&f]'
-    format: '{venturechat_channel_prefix} {vault_prefix}{player_displayname}&b:'
   Trade:
     color: dark_aqua
     chatcolor: dark_aqua
@@ -395,18 +333,3 @@ channels:
     speak_permissions: None
     channel_prefix: '&f[&3Trade&f]'
     format: '{venturechat_channel_prefix} {vault_prefix}{player_displayname}&3:'
-  Local:
-    color: yellow
-    chatcolor: yellow
-    mutable: true
-    filter: true
-    autojoin: true
-    default: false
-    distance: 230
-    cooldown: 0
-    bungeecord: false
-    alias: l
-    permissions: None
-    speak_permissions: None
-    channel_prefix: '&f[&eLocal&f]'
-    format: '{venturechat_channel_prefix} {vault_prefix}{player_displayname}&e:'
