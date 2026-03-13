@@ -8,9 +8,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import mineverse.Aust1n46.chat.MineverseChat;
 import mineverse.Aust1n46.chat.localization.LocalizedMessage;
 import mineverse.Aust1n46.chat.utilities.Format;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.StringJoiner;
 
 public class Broadcast extends Command {
-	private MineverseChat plugin = MineverseChat.getInstance();
+	private final MineverseChat plugin = MineverseChat.getInstance();
 
 	public Broadcast() {
 		super("broadcast");
@@ -24,13 +28,13 @@ public class Broadcast extends Command {
 		String broadcastDisplayTag = Format.FormatStringAll(bs.getString("displaytag", "[Broadcast]"));
 		if (broadcastPermissions.equalsIgnoreCase("None") || sender.hasPermission(broadcastPermissions)) {
 			if (args.length > 0) {
-				String bc = "";
-				for (int x = 0; x < args.length; x++) {
-					if (args[x].length() > 0)
-						bc += args[x] + " ";
-				}
-				bc = Format.FormatStringAll(bc);
-				Format.broadcastToServer(broadcastDisplayTag + ChatColor.valueOf(broadcastColor.toUpperCase()) + " " + bc);
+				StringJoiner bc = new StringJoiner(" ");
+        for (String arg : args) {
+          if (!arg.isEmpty())
+            bc.add(arg);
+        }
+				String msg = Format.FormatStringAll(bc.toString());
+				Format.broadcastToProxy(plugin, broadcastDisplayTag + ChatColor.valueOf(broadcastColor.toUpperCase()) + " " + msg);
 				return true;
 			} else {
 				sender.sendMessage(LocalizedMessage.COMMAND_INVALID_ARGUMENTS.toString().replace("{command}", "/broadcast").replace("{args}", "[msg]"));
@@ -40,5 +44,10 @@ public class Broadcast extends Command {
 			sender.sendMessage(LocalizedMessage.COMMAND_NO_PERMISSION.toString());
 			return true;
 		}
+	}
+
+	@Override
+	public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String @NotNull [] args) {
+		return List.of();
 	}
 }

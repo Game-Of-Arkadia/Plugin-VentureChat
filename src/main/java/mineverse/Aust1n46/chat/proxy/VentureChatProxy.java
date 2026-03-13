@@ -25,6 +25,19 @@ public class VentureChatProxy {
 			//System.out.println(subchannel);
 			final ByteArrayOutputStream outstream = new ByteArrayOutputStream();
 			DataOutputStream out = new DataOutputStream(outstream);
+
+			if(subchannel.equals("Broadcast")) {
+				String content = in.readUTF();
+				out.writeUTF("Broadcast");
+				out.writeUTF(content);
+
+				for(VentureChatProxyServer send : source.getServers()) {
+					if(!send.isEmpty()) {
+						source.sendPluginMessage(send.getName(), outstream.toByteArray());
+					}
+				}
+				return;
+			}
 			if(subchannel.equals("Chat")) {
 				String chatchannel = in.readUTF();
 				String senderName = in.readUTF();

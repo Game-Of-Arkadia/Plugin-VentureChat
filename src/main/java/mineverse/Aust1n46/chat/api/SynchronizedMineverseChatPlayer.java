@@ -1,22 +1,16 @@
 package mineverse.Aust1n46.chat.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import mineverse.Aust1n46.chat.command.mute.MuteContainer;
 
 public class SynchronizedMineverseChatPlayer {
     private UUID uuid;
     private Set<String> listening;
-    private HashMap<String, MuteContainer> mutes;
+    private Map<String, MuteContainer> mutes;
     private Set<UUID> ignores;
     private int messagePackets;
-    private List<String> messageData = new ArrayList<String>();
+    private List<String> messageData = new ArrayList<>();
     private boolean spy;
     private boolean messageToggle;
 
@@ -31,9 +25,9 @@ public class SynchronizedMineverseChatPlayer {
 
     public SynchronizedMineverseChatPlayer(UUID uuid) {
         this.uuid = uuid;
-        listening = new HashSet<String>();
-        mutes = new HashMap<String, MuteContainer>();
-        ignores = new HashSet<UUID>();
+        listening = new HashSet<>();
+        mutes = new HashMap<>();
+        ignores = new HashSet<>();
         spy = false;
         messageToggle = true;
     }

@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.PluginManager;
 
 import com.comphenix.protocol.events.PacketContainer;
 
@@ -101,9 +100,9 @@ public class ChatListener implements Listener {
 					return;
 				}
 				String filtered = chat;
-				String echo = "";
-				String send = "";
-				String spy = "";
+				String echo;
+				String send;
+				String spy;
 				if(mcp.hasFilter()) {
 					filtered = Format.FilterChat(filtered);
 				}
@@ -270,7 +269,6 @@ public class ChatListener implements Listener {
 					mcp.getPlayer().sendMessage(LocalizedMessage.CHANNEL_COOLDOWN.toString()
 							.replace("{cooldown}", cooldownString));
 					mcp.setQuickChat(false);
-					bungee = false;
 					return;
 				}
 			}
@@ -349,7 +347,7 @@ public class ChatListener implements Listener {
 				chat = Format.FilterChat(chat);
 			}
 		}
-		PluginManager pluginManager = plugin.getServer().getPluginManager();
+
 		for(MineverseChatPlayer p : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
 			if(p.getPlayer() != mcp.getPlayer()) {
 				if(!p.isListening(eventChannel.getName())) {
@@ -455,34 +453,33 @@ public class ChatListener implements Listener {
 			Bukkit.getConsoleSender().sendMessage(consoleChat);
 			return;
 		}
-		else {
-			ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
-			DataOutputStream out = new DataOutputStream(byteOutStream);
-			try {
-				out.writeUTF("Chat");
-				out.writeUTF(channel.getName());
-				out.writeUTF(mcp.getName());
-				out.writeUTF(mcp.getUUID().toString());
-				out.writeBoolean(mcp.getBungeeToggle());
-				out.writeInt(hash);
-				out.writeUTF(format);
-				out.writeUTF(chat);
-				if(plugin.getConfig().getString("loglevel", "info").equals("debug")) {
-					System.out.println(out.size() + " size bytes without json");
-				}
-				out.writeUTF(globalJSON);
-				if(plugin.getConfig().getString("loglevel", "info").equals("debug")) {
-					System.out.println(out.size() + " bytes size with json");
-				}
-				out.writeUTF(MineverseChat.getVaultPermission().getPrimaryGroup(mcp.getPlayer()));
-				out.writeUTF(mcp.getNickname());
-				mcp.getPlayer().sendPluginMessage(plugin, MineverseChat.PLUGIN_MESSAGING_CHANNEL, byteOutStream.toByteArray());
-				out.close();
+
+		// Chat to all
+		ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(byteOutStream);
+		try {
+			out.writeUTF("Chat");
+			out.writeUTF(channel.getName());
+			out.writeUTF(mcp.getName());
+			out.writeUTF(mcp.getUUID().toString());
+			out.writeBoolean(mcp.getBungeeToggle());
+			out.writeInt(hash);
+			out.writeUTF(format);
+			out.writeUTF(chat);
+			if(plugin.getConfig().getString("loglevel", "info").equals("debug")) {
+				System.out.println(out.size() + " size bytes without json");
 			}
-			catch(Exception e) {
-				e.printStackTrace();
+			out.writeUTF(globalJSON);
+			if(plugin.getConfig().getString("loglevel", "info").equals("debug")) {
+				System.out.println(out.size() + " bytes size with json");
 			}
-			return;
+			out.writeUTF(MineverseChat.getVaultPermission().getPrimaryGroup(mcp.getPlayer()));
+			out.writeUTF(mcp.getNickname());
+			mcp.getPlayer().sendPluginMessage(plugin, MineverseChat.PLUGIN_MESSAGING_CHANNEL, byteOutStream.toByteArray());
+			out.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

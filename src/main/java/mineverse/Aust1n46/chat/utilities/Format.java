@@ -2,6 +2,8 @@ package mineverse.Aust1n46.chat.utilities;
 
 import static mineverse.Aust1n46.chat.MineverseChat.getInstance;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -15,6 +17,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
 
 import com.comphenix.protocol.PacketType;
@@ -611,20 +614,20 @@ public class Format {
 		if (VersionHandler.is1_7() || VersionHandler.is1_8() || VersionHandler.is1_9() || VersionHandler.is1_10()
 				|| VersionHandler.is1_11() || VersionHandler.is1_12() || VersionHandler.is1_13()
 				|| (VersionHandler.is1_14() && !VersionHandler.is1_14_4())) {
-			ArrayList<?> list = (ArrayList<?>) c.getMethod("a").invoke(o, new Object[0]);
+			List<?> list = (List<?>) c.getMethod("a").invoke(o, new Object[0]);
 			for (Object component : list) {
-				ArrayList<?> innerList = (ArrayList<?>) c.getMethod("a").invoke(component, new Object[0]);
-				if (innerList.size() > 0) {
+				List<?> innerList = (List<?>) c.getMethod("a").invoke(component, new Object[0]);
+				if (!innerList.isEmpty()) {
 					splitComponents(finalList, component, c);
 				} else {
 					finalList.add(component);
 				}
 			}
 		} else if(VersionHandler.is1_14_4() || VersionHandler.is1_15() || VersionHandler.is1_16() || VersionHandler.is1_17()) {
-			ArrayList<?> list = (ArrayList<?>) c.getMethod("getSiblings").invoke(o, new Object[0]);
+			List<?> list = (List<?>) c.getMethod("getSiblings").invoke(o, new Object[0]);
 			for (Object component : list) {
-				ArrayList<?> innerList = (ArrayList<?>) c.getMethod("getSiblings").invoke(component, new Object[0]);
-				if (innerList.size() > 0) {
+				List<?> innerList = (List<?>) c.getMethod("getSiblings").invoke(component, new Object[0]);
+				if (!innerList.isEmpty()) {
 					splitComponents(finalList, component, c);
 				} else {
 					finalList.add(component);
@@ -635,7 +638,7 @@ public class Format {
 			ArrayList<?> list = (ArrayList<?>) c.getMethod("b").invoke(o, new Object[0]);
 			for (Object component : list) {
 				ArrayList<?> innerList = (ArrayList<?>) c.getMethod("b").invoke(component, new Object[0]);
-				if (innerList.size() > 0) {
+				if (!innerList.isEmpty()) {
 					splitComponents(finalList, component, c);
 				} else {
 					finalList.add(component);
@@ -744,7 +747,7 @@ public class Format {
 	}
 
 	public static boolean isValidColor(String color) {
-		Boolean bFound = false;
+		boolean bFound = false;
 		for (ChatColor bkColors : ChatColor.values()) {
 			if (color.equalsIgnoreCase(bkColors.name())) {
 				bFound = true;
@@ -865,7 +868,7 @@ public class Format {
 	public static long parseTimeStringToMillis(String timeInput) {
 		long millis = 0L;
 		timeInput = timeInput.toLowerCase();
-		char validChars[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd', 'h', 'm', 's' };
+		char[] validChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'd', 'h', 'm', 's' };
 		if(containsInvalidChars(validChars, timeInput)) {
 			return -1;
 		}
@@ -903,7 +906,7 @@ public class Format {
 			timeInput = timeInput.substring(indexOfDayToken + 1);
 			millis += MILLISECONDS_PER_DAY * numberOfDays;
 		}
-		if(timeInput.length() > 0) {
+		if(!timeInput.isEmpty()) {
 			indexOfHourToken = timeInput.indexOf("h");
 			if(indexOfHourToken != -1) {
 				int numberOfHours = Integer.parseInt(timeInput.substring(0, indexOfHourToken));
@@ -911,7 +914,7 @@ public class Format {
 				millis += MILLISECONDS_PER_HOUR * numberOfHours;
 			}
 		}
-		if(timeInput.length() > 0) {
+		if(!timeInput.isEmpty()) {
 			indexOfMinuteToken = timeInput.indexOf("m");
 			if(indexOfMinuteToken != -1) {
 				int numberOfMinutes = Integer.parseInt(timeInput.substring(0, indexOfMinuteToken));
@@ -919,7 +922,7 @@ public class Format {
 				millis += MILLISECONDS_PER_MINUTE * numberOfMinutes;
 			}
 		}
-		if(timeInput.length() > 0) {
+		if(!timeInput.isEmpty()) {
 			indexOfSecondToken = timeInput.indexOf("s");
 			if(indexOfSecondToken != -1) {
 				int numberOfSeconds = Integer.parseInt(timeInput.substring(0, indexOfSecondToken));
@@ -934,9 +937,10 @@ public class Format {
 		for(char c : validate.toCharArray()) {
 			boolean isValidChar = false;
 			for(char v : validChars) {
-				if(c == v) {
-					isValidChar = true;
-				}
+        if (c == v) {
+          isValidChar = true;
+          break;
+        }
 			}
 			if(!isValidChar) {
 				return true;
@@ -944,13 +948,29 @@ public class Format {
 		}
 		return false;
 	}
-	
+
 	public static void broadcastToServer(String message) {
 		for(MineverseChatPlayer mcp : MineverseChatAPI.getOnlineMineverseChatPlayers()) {
 			mcp.getPlayer().sendMessage(message);
 		}
 	}
-	
+
+
+	public static void broadcastToProxy(JavaPlugin plugin, String message) {
+		ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(byteOutStream);
+		try {
+			out.writeUTF("Broadcast");
+			out.writeUTF(message);
+
+			Player player = Bukkit.getOnlinePlayers().iterator().next();
+			player.sendPluginMessage(plugin, MineverseChat.PLUGIN_MESSAGING_CHANNEL, byteOutStream.toByteArray());
+			out.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void playMessageSound(MineverseChatPlayer mcp) {
 		Player player = mcp.getPlayer();
 		String soundName = getInstance().getConfig().getString("message_sound");

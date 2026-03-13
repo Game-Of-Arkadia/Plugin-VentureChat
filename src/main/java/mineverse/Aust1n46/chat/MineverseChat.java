@@ -71,9 +71,9 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 	public static ChatChannelInfo ccInfo;
 
 	@Deprecated
-	public static Set<MineverseChatPlayer> players = new HashSet<MineverseChatPlayer>();
+	public static final Set<MineverseChatPlayer> players = new HashSet<>();
 	@Deprecated
-	public static Set<MineverseChatPlayer> onlinePlayers = new HashSet<MineverseChatPlayer>();
+	public static final Set<MineverseChatPlayer> onlinePlayers = new HashSet<>();
 
 	// Vault
 	private static Permission permission = null;
@@ -344,13 +344,13 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 	}
 	
 	public static void sendPluginMessage(ByteArrayOutputStream byteOutStream) {
-		if(MineverseChatAPI.getOnlineMineverseChatPlayers().size() > 0) {
+		if(!MineverseChatAPI.getOnlineMineverseChatPlayers().isEmpty()) {
 			MineverseChatAPI.getOnlineMineverseChatPlayers().iterator().next().getPlayer().sendPluginMessage(getInstance(), PLUGIN_MESSAGING_CHANNEL, byteOutStream.toByteArray());
 		}
 	}
 	
 	public static void sendDiscordSRVPluginMessage(String chatChannel, String message) {
-		if(MineverseChatAPI.getOnlineMineverseChatPlayers().size() == 0) {
+		if(MineverseChatAPI.getOnlineMineverseChatPlayers().isEmpty()) {
 			return;
 		}
 		ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
@@ -383,6 +383,11 @@ public class MineverseChat extends JavaPlugin implements PluginMessageListener {
 			String subchannel = msgin.readUTF();
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			DataOutputStream out = new DataOutputStream(stream);
+			if(subchannel.equals("Broadcast")) {
+				String message = msgin.readUTF();
+				Bukkit.broadcastMessage(message);
+				return;
+			}
 			if(subchannel.equals("Chat")) {
 				String server = msgin.readUTF();
 				String chatchannel = msgin.readUTF();

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -146,10 +145,8 @@ public class VentureChatVelocity implements VentureChatProxySource {
 
 	@Override
 	public void sendPluginMessage(String serverName, byte[] data) {
-		Optional<RegisteredServer> server = proxyServer.getServer(serverName);
-		if(server.isPresent()) {
-			server.get().sendPluginMessage(channelIdentifier, data);
-		}
+		proxyServer.getServer(serverName)
+				.ifPresent(registeredServer -> registeredServer.sendPluginMessage(channelIdentifier, data));
 	}
 
 	@Override

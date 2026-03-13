@@ -1,10 +1,6 @@
 package mineverse.Aust1n46.chat.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.entity.Player;
 
@@ -17,90 +13,84 @@ import mineverse.Aust1n46.chat.MineverseChat;
  * @author Aust1n46
  */
 public final class MineverseChatAPI {
-    private static HashMap<UUID, MineverseChatPlayer> playerMap = new HashMap<UUID, MineverseChatPlayer>();
-    private static HashMap<String, UUID> namesMap = new HashMap<String, UUID>();
-    private static HashMap<UUID, MineverseChatPlayer> onlinePlayerMap = new HashMap<UUID, MineverseChatPlayer>();
-    private static List<String> networkPlayerNames = new ArrayList<String>();
-
-    private static HashMap<UUID, SynchronizedMineverseChatPlayer> proxyPlayerMap = new HashMap<UUID, SynchronizedMineverseChatPlayer>();
+    private static final Map<UUID, MineverseChatPlayer> PLAYER_MAP = new HashMap<>();
+    private static final Map<String, UUID> NAMES_MAP = new HashMap<String, UUID>();
+    private static final Map<UUID, MineverseChatPlayer> ONLINE_PLAYER_MAP = new HashMap<>();
+    private static final List<String> NETWORK_PLAYER_NAMES = new ArrayList<>();
+    private static final Map<UUID, SynchronizedMineverseChatPlayer> PROXY_PLAYER_MAP = new HashMap<>();
 
     public static List<String> getNetworkPlayerNames() {
-        return networkPlayerNames;
+        return NETWORK_PLAYER_NAMES;
     }
 
     public static void clearNetworkPlayerNames() {
-        networkPlayerNames.clear();
+        NETWORK_PLAYER_NAMES.clear();
     }
 
     public static void addNetworkPlayerName(String name) {
-        networkPlayerNames.add(name);
+        NETWORK_PLAYER_NAMES.add(name);
     }
 
     public static void addSynchronizedMineverseChatPlayerToMap(SynchronizedMineverseChatPlayer smcp) {
-        proxyPlayerMap.put(smcp.getUUID(), smcp);
+        PROXY_PLAYER_MAP.put(smcp.getUUID(), smcp);
     }
-
-//    @Deprecated
-//    public static void clearBungeePlayerMap() {
-//        clearProxyPlayerMap();
-//    }
     
     public static void clearProxyPlayerMap() {
-        proxyPlayerMap.clear();
+        PROXY_PLAYER_MAP.clear();
     }
 
     public static Collection<SynchronizedMineverseChatPlayer> getSynchronizedMineverseChatPlayers() {
-        return proxyPlayerMap.values();
+        return PROXY_PLAYER_MAP.values();
     }
 
     public static void addNameToMap(MineverseChatPlayer mcp) {
-        namesMap.put(mcp.getName(), mcp.getUUID());
+        NAMES_MAP.put(mcp.getName(), mcp.getUUID());
     }
 
     public static void removeNameFromMap(String name) {
-        namesMap.remove(name);
+        NAMES_MAP.remove(name);
     }
 
     public static void clearNameMap() {
-        namesMap.clear();
+        NAMES_MAP.clear();
     }
 
     @SuppressWarnings("deprecation")
     public static void addMineverseChatPlayerToMap(MineverseChatPlayer mcp) {
-        playerMap.put(mcp.getUUID(), mcp);
+        PLAYER_MAP.put(mcp.getUUID(), mcp);
         MineverseChat.players.add(mcp);
     }
 
     @SuppressWarnings("deprecation")
     public static void clearMineverseChatPlayerMap() {
-        playerMap.clear();
+        PLAYER_MAP.clear();
         MineverseChat.players.clear();
     }
 
     public static Collection<MineverseChatPlayer> getMineverseChatPlayers() {
-        return playerMap.values();
+        return PLAYER_MAP.values();
     }
 
     @SuppressWarnings("deprecation")
     public static void addMineverseChatOnlinePlayerToMap(MineverseChatPlayer mcp) {
-        onlinePlayerMap.put(mcp.getUUID(), mcp);
+        ONLINE_PLAYER_MAP.put(mcp.getUUID(), mcp);
         MineverseChat.onlinePlayers.add(mcp);
     }
 
     @SuppressWarnings("deprecation")
     public static void removeMineverseChatOnlinePlayerToMap(MineverseChatPlayer mcp) {
-        onlinePlayerMap.remove(mcp.getUUID());
+        ONLINE_PLAYER_MAP.remove(mcp.getUUID());
         MineverseChat.onlinePlayers.remove(mcp);
     }
 
     @SuppressWarnings("deprecation")
     public static void clearOnlineMineverseChatPlayerMap() {
-        onlinePlayerMap.clear();
+        ONLINE_PLAYER_MAP.clear();
         MineverseChat.onlinePlayers.clear();
     }
 
     public static Collection<MineverseChatPlayer> getOnlineMineverseChatPlayers() {
-        return onlinePlayerMap.values();
+        return ONLINE_PLAYER_MAP.values();
     }
 
     /**
@@ -120,7 +110,7 @@ public final class MineverseChatAPI {
      * @return {@link MineverseChatPlayer}
      */
     public static MineverseChatPlayer getMineverseChatPlayer(UUID uuid) {
-        return playerMap.get(uuid);
+        return PLAYER_MAP.get(uuid);
     }
 
     /**
@@ -130,7 +120,7 @@ public final class MineverseChatAPI {
      * @return {@link MineverseChatPlayer}
      */
     public static MineverseChatPlayer getMineverseChatPlayer(String name) {
-        return getMineverseChatPlayer(namesMap.get(name));
+        return getMineverseChatPlayer(NAMES_MAP.get(name));
     }
 
     /**
@@ -152,7 +142,7 @@ public final class MineverseChatAPI {
      * @return {@link MineverseChatPlayer}
      */
     public static MineverseChatPlayer getOnlineMineverseChatPlayer(UUID uuid) {
-        return onlinePlayerMap.get(uuid);
+        return ONLINE_PLAYER_MAP.get(uuid);
     }
 
     /**
@@ -163,7 +153,7 @@ public final class MineverseChatAPI {
      * @return {@link MineverseChatPlayer}
      */
     public static MineverseChatPlayer getOnlineMineverseChatPlayer(String name) {
-        return getOnlineMineverseChatPlayer(namesMap.get(name));
+        return getOnlineMineverseChatPlayer(NAMES_MAP.get(name));
     }
 
     /**
@@ -173,6 +163,6 @@ public final class MineverseChatAPI {
      * @return {@link SynchronizedMineverseChatPlayer}
      */
     public static SynchronizedMineverseChatPlayer getSynchronizedMineverseChatPlayer(UUID uuid) {
-        return proxyPlayerMap.get(uuid);
+        return PROXY_PLAYER_MAP.get(uuid);
     }
 }
