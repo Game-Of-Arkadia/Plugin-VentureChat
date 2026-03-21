@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.game-of-arkadia.venturechat</groupId>
     <artifactId>venturechat</artifactId>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>4.0.2-SNAPSHOT</version>
     <url>https://bitbucket.org/Aust1n46/venturechat/src/master</url>
     <scm>
         <url>https://bitbucket.org/Aust1n46/venturechat/src/master</url>

@@ -410,8 +410,8 @@ public class ChatChannel {
 	 * 
 	 * @return {@link Double}
 	 */
-	public Double getDistance() {
-		return Double.valueOf(distance);
+	public double getDistance() {
+		return distance;
 	}
 
 	/**
@@ -420,8 +420,8 @@ public class ChatChannel {
 	 * @return {@link Boolean#TRUE} if the distance is greater than zero,
 	 *         {@link Boolean#FALSE} otherwise.
 	 */
-	public Boolean hasDistance() {
-		return Boolean.valueOf(distance > 0);
+	public boolean hasDistance() {
+		return distance > 0;
 	}
 
 	/**
@@ -430,8 +430,8 @@ public class ChatChannel {
 	 * @return {@link Boolean#TRUE} if the cooldown is greater than zero,
 	 *         {@link Boolean#FALSE} otherwise.
 	 */
-	public Boolean hasCooldown() {
-		return Boolean.valueOf(cooldown > 0);
+	public boolean hasCooldown() {
+		return cooldown > 0;
 	}
 
 	/**
@@ -440,8 +440,9 @@ public class ChatChannel {
 	 * @return {@link Boolean#TRUE} if the permission does not equal
 	 *         {@link ChatChannel#NO_PERMISSIONS}, {@link Boolean#FALSE} otherwise.
 	 */
-	public Boolean hasPermission() {
-		return Boolean.valueOf(!permission.equalsIgnoreCase(NO_PERMISSIONS));
+	public boolean hasPermission() {
+		if("None".equalsIgnoreCase(permission)) return false;
+		return !permission.equalsIgnoreCase(NO_PERMISSIONS);
 	}
 
 	/**
@@ -451,6 +452,7 @@ public class ChatChannel {
 	 *         {@link ChatChannel#NO_PERMISSIONS}, false otherwise.
 	 */
 	public boolean hasSpeakPermission() {
+		if("None".equalsIgnoreCase(speakPermission)) return false;
 		return !speakPermission.equalsIgnoreCase(NO_PERMISSIONS);
 	}
 
